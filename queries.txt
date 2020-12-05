@@ -12,6 +12,11 @@ CREATE (Sarah:Person {name: 'Sarah', infected:'No', daysSinceTest:0})
 CREATE (Abby:Person {name: 'Abby', infected:'No', daysSinceTest:0})
 CREATE (Greg:Person {name: 'Greg', infected:'No', daysSinceTest:0})
 CREATE (Emily:Person {name: 'Emily', infected:'No', daysSinceTest:0})
+CREATE (Coleman:Person {name: 'Coleman', infected:'No', daysSinceTest:0})
+CREATE (Lamisha:Person {name: 'Lamisha', infected:'No', daysSinceTest:0})
+CREATE (Doug:Person {name: 'Doug', infected:'No', daysSinceTest:0})
+CREATE (James:Person {name: 'James', infected:'No', daysSinceTest:0})
+
 CREATE
 (Drew)-[:CONTACTED{daysSince: 3}]->(Alison),
 (Drew)<-[:CONTACTED{daysSince: 3}]-(Alison),
@@ -26,8 +31,15 @@ CREATE
 (Abby)-[:CONTACTED{daysSince: 2}]->(Greg),
 (Abby)<-[:CONTACTED{daysSince: 2}]-(Greg),
 (Alison)-[:VISITED{daysSince: 2}]->(Walmart),
-(Emily)-[:VISITED{daysSince: 1}]->(Walmart)
-
+(Emily)-[:VISITED{daysSince: 1}]->(Walmart),
+(Coleman)-[:VISITED{daysSince: 1}]->(Colonial),
+(Lamisha)-[:VISITED{daysSince: 5}]->(Walmart),
+(Doug)-[:VISITED{daysSince: 2}]->(Colonial),
+(James)-[:VISITED{daysSince: 0}]->(Walmart),
+(Coleman)-[:CONTACTED{daysSince: 1}]->(Abby),
+(Coleman)<-[:CONTACTED{daysSince: 1}]-(Abby),
+(Lamisha)-[:CONTACTED{daysSince: 2}]->(Coleman),
+(Lamisha)<-[:CONTACTED{daysSince: 2}]-(Coleman)
 
 MATCH (n)
 RETURN n
