@@ -1,0 +1,33 @@
+MATCH (n)
+DETACH DELETE n
+
+
+CREATE (Colonial:Location {name: 'The Colonial'})
+CREATE (Walmart:Location {name: 'Walmart'})
+CREATE (Drew:Person {name: 'Drew', infected:'No', daysSinceTest:0})
+CREATE (Alison:Person {name: 'Alison', infected:'No', daysSinceTest:0})
+CREATE (David:Person {name: 'David', infected:'No', daysSinceTest:0})
+CREATE (Mike:Person {name: 'Mike', infected:'No', daysSinceTest:0})
+CREATE (Sarah:Person {name: 'Sarah', infected:'No', daysSinceTest:0})
+CREATE (Abby:Person {name: 'Abby', infected:'No', daysSinceTest:0})
+CREATE (Greg:Person {name: 'Greg', infected:'No', daysSinceTest:0})
+CREATE (Emily:Person {name: 'Emily', infected:'No', daysSinceTest:0})
+CREATE
+(Drew)-[:CONTACTED{daysSince: 3}]->(Alison),
+(Drew)<-[:CONTACTED{daysSince: 3}]-(Alison),
+(Alison)-[:CONTACTED{daysSince: 2}]->(Sarah),
+(Alison)<-[:CONTACTED{daysSince: 2}]-(Sarah),
+(Alison)-[:CONTACTED{daysSince: 1}]->(Mike),
+(Alison)<-[:CONTACTED{daysSince: 1}]-(Mike),
+(Sarah)-[:CONTACTED{daysSince: 1}]->(David),
+(Sarah)<-[:CONTACTED{daysSince: 1}]-(David),
+(Drew)-[:VISITED{daysSince: 4}]->(Colonial),
+(Abby)-[:VISITED{daysSince: 3}]->(Colonial),
+(Abby)-[:CONTACTED{daysSince: 2}]->(Greg),
+(Abby)<-[:CONTACTED{daysSince: 2}]-(Greg),
+(Alison)-[:VISITED{daysSince: 2}]->(Walmart),
+(Emily)-[:VISITED{daysSince: 1}]->(Walmart)
+
+
+MATCH (n)
+RETURN n
