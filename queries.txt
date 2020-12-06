@@ -43,3 +43,10 @@ CREATE
 
 MATCH (n)
 RETURN n
+
+
+
+High Query: MATCH (Drew:Person {name:"Drew"})-[*1]-(high) RETURN DISTINCT high
+Medium Query: MATCH (Drew:Person {name:"Drew"})-[*2]-(medium) RETURN DISTINCT medium
+Low Query: MATCH (Drew:Person {name:"Drew"})-[*3]-(low) RETURN DISTINCT low
+
