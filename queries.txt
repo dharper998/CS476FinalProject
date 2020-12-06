@@ -19,17 +19,12 @@ CREATE (James:Person {name: 'James', infected:'No', daysSinceTest:0})
 
 CREATE
 (Drew)-[:CONTACTED{daysSince: 3}]->(Alison),
-(Drew)<-[:CONTACTED{daysSince: 3}]-(Alison),
 (Alison)-[:CONTACTED{daysSince: 2}]->(Sarah),
-(Alison)<-[:CONTACTED{daysSince: 2}]-(Sarah),
 (Alison)-[:CONTACTED{daysSince: 1}]->(Mike),
-(Alison)<-[:CONTACTED{daysSince: 1}]-(Mike),
 (Sarah)-[:CONTACTED{daysSince: 1}]->(David),
-(Sarah)<-[:CONTACTED{daysSince: 1}]-(David),
 (Drew)-[:VISITED{daysSince: 4}]->(Colonial),
 (Abby)-[:VISITED{daysSince: 3}]->(Colonial),
 (Abby)-[:CONTACTED{daysSince: 2}]->(Greg),
-(Abby)<-[:CONTACTED{daysSince: 2}]-(Greg),
 (Alison)-[:VISITED{daysSince: 2}]->(Walmart),
 (Emily)-[:VISITED{daysSince: 1}]->(Walmart),
 (Coleman)-[:VISITED{daysSince: 1}]->(Colonial),
@@ -37,16 +32,18 @@ CREATE
 (Doug)-[:VISITED{daysSince: 2}]->(Colonial),
 (James)-[:VISITED{daysSince: 0}]->(Walmart),
 (Coleman)-[:CONTACTED{daysSince: 1}]->(Abby),
-(Coleman)<-[:CONTACTED{daysSince: 1}]-(Abby),
-(Lamisha)-[:CONTACTED{daysSince: 2}]->(Coleman),
-(Lamisha)<-[:CONTACTED{daysSince: 2}]-(Coleman)
+(Lamisha)-[:CONTACTED{daysSince: 2}]->(Coleman)
 
 MATCH (n)
 RETURN n
 
 
 
-High Query: MATCH (Drew:Person {name:"Drew"})-[*1]-(high) RETURN DISTINCT high
-Medium Query: MATCH (Drew:Person {name:"Drew"})-[*2]-(medium) RETURN DISTINCT medium
-Low Query: MATCH (Drew:Person {name:"Drew"})-[*3]-(low) RETURN DISTINCT low
+High Query: MATCH (p:Person {infected:'Yes'})-[*1]-(high) RETURN DISTINCT high
+Medium Query: MATCH (p:Person {infected:'Yes'})-[*2]-(medium) RETURN DISTINCT medium
+Low Query: MATCH (p:Person {infected:'Yes'})-[*3]-(low) RETURN DISTINCT low
 
+Make Infected: 
+	MATCH (p:Person {name: '<INSERT NAME>'})
+	SET p.infected = 'Yes'
+	RETURN p
