@@ -40,42 +40,45 @@ def get_low_risk(tx):
             "RETURN DISTINCT low")
     return low
 
-with driver.session() as session:
-    session.write_transaction(add_user, "George", "No", 12)
-    session.write_transaction(add_location, "Costco")
-    session.write_transaction(add_contact, "Drew", "George", 8)
-    session.write_transaction(set_infected, "George")
-    session.read_transaction(get_high_risk)
-
-driver.close()
-
 def main():
     in = input("> ")
-    while(in != "exit" and in != "quit"):
-        words = input.split().lower()
-        if words[0] == "add":
-            #add users/locations
-            pass
-        elif words[0] == "delete" or words[0] == "remove":
-            pass
-        elif words[0] == "get" or words[0] == "show":
-            #find a person's risk level
-            #get each risk level
-            pass
-        elif words[1] == "contacted":
-            #add relationships
-            pass
-        elif words[1] == "went" and words[2] == "to":
-            #add relationships
-            pass
-        elif (words[1] == "tested" and words[2] == "positive") or (words[1] == "is" and words[2] == "infected"):
-            #set to infected
-            pass
-        elif words[0] == "tick":
-            pass
-        else:
-            print("input not recognized")
-        in = input("> ")
+    with driver.session() as session:
+        while(in != "exit" and in != "quit"):
+            words = input.split().lower()
+            if words[0] == "add":
+                if words[1] == "person":
+                    session.write_transaction(add_user, words[2])
+                elif words[1] == "location" or words[1] == "place":
+                    session.write_transaction(add_location, words[2])
+                else:
+                    print("input not recognized")
+            elif words[0] == "get" or words[0] == "show":
+                if words[2] == "risk":
+                    if words[1] == "low"
+                        session.write_transaction(get_low_risk)
+                    elif words[1] == "medium":
+                        session.write_transaction(get_medium_risk)
+                    elif words[1] == "high"
+                        session.write_transaction(get_high_risk)
+                    else:
+                        print("input not recognized")
+                else:
+                    print("input not recognized")
+            elif words[1] == "contacted":
+                #add relationships
+                pass
+            elif words[1] == "visited":
+                #add relationships
+                pass
+            elif (words[1] == "tested" and words[2] == "positive") or (words[1] == "is" and words[2] == "infected"):
+                #set to infected
+                pass
+            elif words[0] == "tick":
+                pass
+            else:
+                print("input not recognized")
+            in = input("> ")
+    driver.close()
 
 
 main()
