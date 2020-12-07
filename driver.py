@@ -71,7 +71,7 @@ def main():
                 if words[1] == "person":
                     session.write_transaction(add_user, words[2])
                 elif words[1] == "location" or words[1] == "place":
-                    session.write_transaction(add_location, words[2])
+                    session.write_transaction(add_location, " ".join(words[2:]))
                 else:
                     print("input not recognized")
             elif words[0] == "get" or words[0] == "show":
@@ -87,8 +87,7 @@ def main():
                 else:
                     print("input not recognized")
             elif words[1] == "contacted":
-                #add relationships
-                pass
+                session.write_transaction(add_contact, words[0], words[2], int(words[3]))
             elif words[1] == "visited":
                 #add relationships
                 pass
@@ -96,7 +95,7 @@ def main():
                 #set to infected
                 pass
             elif words[0] == "tick":
-                pass
+                session.write_transaction(tick)
             else:
                 print("input not recognized")
             inp = input("> ")
