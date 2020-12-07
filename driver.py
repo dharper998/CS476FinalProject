@@ -2,10 +2,12 @@ from neo4j import GraphDatabase
 
 driver = GraphDatabase.driver("bolt://127.0.0.1:7687", auth=("neo4j", "asdf"), encrypted=False)
 
-def set_infected(tx, name):
+def set_infected(tx, name, days_since_test):
     tx.run("MATCH (p:Person {name: $name}) "
-            "SET p.infected = 'Yes'",
-            name=name)
+            "SET p.infected = 'Yes' "
+            "SET p.daysSinceTest = $daysSince",
+            name=name,
+            daysSince=days_since_test)
 
 def update_status(tx):
     tx.run("MATCH (p:Person) "
@@ -38,10 +40,18 @@ def add_location(tx, name):
 
 def add_contact(tx, name1, name2, days_since):
     tx.run("MATCH (a:Person {name: $name1}) "
-            "MATCH (b:Person {name: $name2})"
+            "MATCH (b:Person {name: $name2}) "
             "CREATE (a)-[:CONTACTED{daysSince: $daysSince}]->(b)",
             name1=name1,
             name2=name2,
+            daysSince=days_since)
+
+def add_visited(tx, name, location, days_since):
+    tx.run("MATCH (a:Person {name: $name}) "
+            "MATCH (b:Location {name: $location}) "
+            "CREATE (a)-[:VISITED{daysSince: $daysSince}]->(b)",
+            name=name,
+            location=location,
             daysSince=days_since)
 
 def get_high_risk(tx):
