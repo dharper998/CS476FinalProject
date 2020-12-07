@@ -99,11 +99,9 @@ def main():
             elif words[1] == "contacted":
                 session.write_transaction(add_contact, words[0], words[2], int(words[3]))
             elif words[1] == "visited":
-                #add relationships
-                pass
+                session.write_transaction(add_visited, words[0], " ".join(words[2:-1]), int(words[-1]))
             elif (words[1] == "tested" and words[2] == "positive") or (words[1] == "is" and words[2] == "infected"):
-                #set to infected
-                pass
+                session.write_transaction(set_infected, words[0], int(words[3]))
             elif words[0] == "tick":
                 session.write_transaction(tick)
             else:
