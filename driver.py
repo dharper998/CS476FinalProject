@@ -77,7 +77,9 @@ def main():
     with driver.session() as session:
         while(inp != "exit" and inp != "quit"):
             words = inp.lower().split()
-            if words[0] == "add":
+            if words[0] == "tick":
+                session.write_transaction(tick)
+            elif words[0] == "add":
                 if words[1] == "person":
                     session.write_transaction(add_user, words[2])
                 elif words[1] == "location" or words[1] == "place":
@@ -102,8 +104,6 @@ def main():
                 session.write_transaction(add_visited, words[0], " ".join(words[2:-1]), int(words[-1]))
             elif (words[1] == "tested" and words[2] == "positive") or (words[1] == "is" and words[2] == "infected"):
                 session.write_transaction(set_infected, words[0], int(words[3]))
-            elif words[0] == "tick":
-                session.write_transaction(tick)
             else:
                 print("input not recognized")
             inp = input("> ")
