@@ -7,11 +7,30 @@ def set_infected(tx, name):
             "SET p.infected = 'Yes'",
             name=name)
 
-def add_user(tx, name, infected, days_since_test):
-    tx.run("MERGE (p:Person {name: $name, infected: $infected, daysSinceTest: $daysSinceTest})",
-            name=name,
-            infected=infected,
-            daysSinceTest=days_since_test)
+def update_status(tx):
+    tx.run("MATCH (p:Person) "
+            "WHERE p.daysSinceTest >= 14 "
+            "SET p.infected = 'No' "
+            "SET p.daysSinceTest = -1")
+
+def tick(tx):
+    tx.run("MATCH (p:Person) "
+            "WHERE NOT p.daysSinceTest = -1 "
+            "SET p.daysSinceTest += 1")
+    tx.run("MATCH (c:CONTACTED) "
+            "SET c.daysSince += 1")
+    tx.run("MATCH (v:VISITED) "
+            "SET v.daysSince += 1")
+    tx.run("MATCH (c:CONTACTED) "
+            "WHERE c.daysSince >= 14 "
+            "DETACH DELETE c")
+    tx.run("MATCH (v:VISITED) "
+            "WHERE v.daysSince >= 14 "
+            "DETACH DELETE v")
+
+def add_user(tx, name):
+    tx.run("MERGE (p:Person {name: $name, infected: 'No', daysSinceTest: -1})",
+            name=name)
 
 def add_location(tx, name):
     tx.run("MERGE (l:Location {name: $name})",
@@ -28,23 +47,26 @@ def add_contact(tx, name1, name2, days_since):
 def get_high_risk(tx):
     high = tx.run("MATCH (p:Person {infected:'Yes'})-[*1]-(high) "
             "RETURN DISTINCT high")
-    return high
+    for item in high.data():
+        print(item['high']['name'])
 
 def get_medium_risk(tx):
     medium = tx.run("MATCH (p:Person {infected:'Yes'})-[*2]-(medium) "
             "RETURN DISTINCT medium")
-    return medium
+    for item in medium.data():
+        print(item['medium']['name'])
 
 def get_low_risk(tx):
     low = tx.run("MATCH (p:Person {infected:'Yes'})-[*3]-(low) "
             "RETURN DISTINCT low")
-    return low
+    for item in low.data():
+        print(item['low']['name'])
 
 def main():
-    in = input("> ")
+    inp = input("> ")
     with driver.session() as session:
-        while(in != "exit" and in != "quit"):
-            words = input.split().lower()
+        while(inp != "exit" and inp != "quit"):
+            words = inp.lower().split()
             if words[0] == "add":
                 if words[1] == "person":
                     session.write_transaction(add_user, words[2])
@@ -54,12 +76,12 @@ def main():
                     print("input not recognized")
             elif words[0] == "get" or words[0] == "show":
                 if words[2] == "risk":
-                    if words[1] == "low"
-                        session.write_transaction(get_low_risk)
+                    if words[1] == "low":
+                        session.read_transaction(get_low_risk)
                     elif words[1] == "medium":
-                        session.write_transaction(get_medium_risk)
-                    elif words[1] == "high"
-                        session.write_transaction(get_high_risk)
+                        session.read_transaction(get_medium_risk)
+                    elif words[1] == "high":
+                        session.read_transaction(get_high_risk)
                     else:
                         print("input not recognized")
                 else:
@@ -77,7 +99,7 @@ def main():
                 pass
             else:
                 print("input not recognized")
-            in = input("> ")
+            inp = input("> ")
     driver.close()
 
 
