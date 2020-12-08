@@ -32,8 +32,8 @@ add location <location>
 create relationships:
 
 ```
-<person> contacted <person>
-<person> visited <location>
+<person> contacted <person> <days_since>
+<person> visited <location> <days_since>
 ```
 
 advance day:
