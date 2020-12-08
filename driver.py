@@ -63,29 +63,40 @@ def get_high_risk(tx):
     high = tx.run("MATCH (p:Person {infected:'Yes'})-[*1]-(high) "
             "RETURN DISTINCT high")
     for item in high.data():
-        print(item['high']['name'])
+        if('infected' in item['high'].keys()):
+            print("Person: ", item['high']['name'])
+        else:
+            print("Location: ", item['high']['name'])
 
 def get_medium_risk(tx):
     medium = tx.run("MATCH (p:Person {infected:'Yes'})-[c]-(high)-[d]-(medium) "
                     "WHERE d.daysSince <= c.daysSince "
                     "RETURN DISTINCT medium")
     for item in medium.data():
-        print(item['medium']['name'])
+        if('infected' in item['medium'].keys()):
+            print("Person: ", item['medium']['name'])
+        else:
+            print("Location: ", item['medium']['name'])
 
 def get_low_risk(tx):
     low = tx.run("MATCH (p:Person {infected:'Yes'})-[c]-(high)-[d]-(medium)-[e]-(low) "
                     "WHERE e.daysSince <= d.daysSince <= c.daysSince "
                     "RETURN DISTINCT low")
     for item in low.data():
-        print(item['low']['name'])
+        if('infected' in item['low'].keys()):
+            print("Person: ", item['low']['name'])
+        else:
+            print("Location: ", item['low']['name'])
 
 def get_individual_risk(tx, name):
-    status = tx.run("MATCH (p:Person {name: $name}) "
+    status = tx.run("MATCH (p {name: $name}) "
                     "RETURN p",
                     name=name)
-    if(status.data()[0]['p']['infected'] == 'Yes'):
-        print("Infected")
-        return
+    data = status.data()
+    if('infected' in data[0]['p'].keys()):
+        if(data[0]['p']['infected'] == 'Yes'):
+            print("Infected")
+            return
     high = tx.run("MATCH (p:Person {infected:'Yes'})-[*1]-(high) "
             "RETURN DISTINCT high")
     medium = tx.run("MATCH (p:Person {infected:'Yes'})-[c]-(high)-[d]-(medium) "
