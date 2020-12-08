@@ -118,20 +118,20 @@ def main():
             elif words[0] == "add":
                 if words[1] == "person":
                     session.write_transaction(add_user, words[2])
-                elif words[1] == "location" or words[1] == "place":
+                elif words[1] == "location":
                     session.write_transaction(add_location, " ".join(words[2:]))
                 else:
                     print("input not recognized")
-            elif words[0] == "get" or words[0] == "show":
-                if words[2] == "risk":
-                    if words[1] == "low":
+            elif words[0] == "get":
+                if words[1] == "risk":
+                    if words[2] == "low":
                         session.read_transaction(get_low_risk)
-                    elif words[1] == "medium":
+                    elif words[2] == "medium":
                         session.read_transaction(get_medium_risk)
-                    elif words[1] == "high":
+                    elif words[2] == "high":
                         session.read_transaction(get_high_risk)
                     else:
-                        session.read_transaction(get_individual_risk, words[1])
+                        session.read_transaction(get_individual_risk, " ".join(words[2:]))
                 else:
                     print("input not recognized")
             elif words[1] == "contacted":
@@ -141,7 +141,7 @@ def main():
             elif (words[1] == "tested" and words[2] == "positive") or (words[1] == "is" and words[2] == "infected"):
                 session.write_transaction(set_infected, words[0], "Yes", int(words[3]))
             elif (words[1] == "tested" and words[2] == "negative"):
-                session.write_transaction(set_infected, words[0], "No", int(words[3]))
+                session.write_transaction(set_infected, words[0], "No", -1)
             else:
                 print("input not recognized")
             inp = input("> ")
